@@ -13,10 +13,14 @@ let nextBtnFlag = false
 let clockSwitch = false
 let timesRun = 0;
 let prepareTime = NaN
+let i = 0  // index inside the func
 
-const kidInput = document.getElementById('kid-name')
+
 const myScreen = document.getElementById('screen');
+const kidInput = document.getElementById('kid-name')
+const radioButtons = document.querySelectorAll('input[name="status"]');
 let sendBtn = document.getElementById('send-btn')
+let warningOut = document.getElementById('warning')
 let removeBtn = document.getElementById('remove-btn')
 let oldBtn = document.getElementById('old-btn')
 let timeBtn = document.getElementById('time-btn')
@@ -28,9 +32,11 @@ let mySound = new Audio('/sound/endVoice.m4a')
 
 myInputBtn.addEventListener('click',() => {
 timeInput.style.display = 'inline'
+myInputBtn.style.color = '#ffffff00'
 })
 
 sendBtn.addEventListener('click', () => {
+    if(kidInput.value.length > 0){
     let tempName = kidInput.value;
     playersArr.push(tempName)
     console.log(tempName)
@@ -38,6 +44,11 @@ sendBtn.addEventListener('click', () => {
     let arrJSON = JSON.stringify(playersArr);
     localStorage.setItem('Player-Array', arrJSON)
     kidInput.value = ''
+    displayPlayers()
+    warningOut.innerHTML = ``
+}else{
+    warningOut.innerHTML = `שם קצר מידי`
+    }
 })
 // suffle func
 const shuffleArray = (arr) => arr.sort(() => 0.5 - Math.random());
@@ -46,20 +57,10 @@ let displayPlayers =()=>{
     myScreen.innerHTML = ''
     for(x=0;x<playersArr.length;x++){
         myScreen.innerHTML += `
-        <fieldset class="btn player-btn" id="player-${x}"><p>${playersArr[x]}</p></fieldset> 
+        <fieldset class="btn player-btn" id="player-${x}">${playersArr[x]}</fieldset> 
         `
     }
 }
-oldBtn.addEventListener('click',() => {
-    displayPlayers()
-    
-    let playerBtns = document.querySelectorAll('.player-btn')
-    playerBtns.forEach((button)=>{
-        button.addEventListener('click',(evt)=>{
-
-        })
-    })
-})
 
 let myTimeDivs = document.querySelectorAll('.time-div')
 myTimeDivs.forEach((btn)=>{
@@ -73,22 +74,29 @@ myTimeDivs.forEach((btn)=>{
 
 
 removeBtn.addEventListener('click',() => {
-    if(confirm('hi')){
+    if(confirm('אתה רוצה למחוק את הרשימה?')){
         localStorage.removeItem('Player-Array')
         myScreen.innerHTML = ''
     playersArr = []
     console.log(playersArr)
     displayPlayers()
+    window.location.reload()
+
     }
 })
 
-
-myShulfeBtn.addEventListener('click',()=>{
-shuffleArray(playersArr)
-displayPlayers()
-myScreen.style.transform = "rotate(720deg)"; 
-myScreen.style.transition = "all 2s";
-})
+myShulfeBtn.addEventListener('click',(e)=>{
+    if(clockSwitch === false){
+    shuffleArray(playersArr)
+    e.preventDefault;
+    myScreen.classList.remove('run-animation')
+    setTimeout(()=>{
+        displayPlayers()
+    },500)
+    void myScreen.offsetWidth;    
+    myScreen.classList.add('run-animation')
+}
+},false)
 
 
 const playTimeFunc=(flag)=>{
@@ -113,7 +121,7 @@ let  interval = setInterval(function(){
       //voice funtion
       //start the next player  
   },theTime*60*1000) 
-  return timeoutMeth
+//   return timeoutMeth
 }else{
     clockSwitch = true;
     let timeValue = timeInput.value 
@@ -133,7 +141,7 @@ let  interval = setInterval(function(){
     mySound.play()
 }, 2000); 
   },theTime*60*1000) 
-return timeoutMeth
+// return timeoutMeth
 } 
 }
 }
@@ -146,34 +154,47 @@ return timeoutMeth
 const checkedFunc = ()=>{
     let selectedSize;
     for (const radioButton of radioButtons) {
+        radioButton.disabled = true
         if (radioButton.checked) {
             selectedSize = radioButton.value;
             break;
         }
     }
     return selectedSize
+
 }
 
-const radioButtons = document.querySelectorAll('input[name="status"]');
 
-let i = 0  // index inside the func
+
+
 timeBtn.addEventListener('click',() => {
-// declaring the player
+if(playersArr.length<1){
+myScreen.innerHTML = `<span class="warning-msg">הכנס משתמש!</span>`
+}
+
+    // declaring the player
 if(clockSwitch === false){
+timeInput.value < 0 ? timeInput.value = 0 : console.log('ok')    
+
     let playersDiv = document.getElementById(`player-${i}`)
     playersDiv.style.backgroundColor = 'chartreuse'
+    let newSvg = document.createElement('img')
+    newSvg.id = `gamepad-${i}`
+    newSvg.setAttribute('src','/svg/stadia_controller_FILL0_wght400_GRAD0_opsz48.svg')
+playersDiv.appendChild(newSvg)
+    
     i++
-    }
     let selectedSize = checkedFunc();
     console.log(typeof selectedSize)
-playTimeFunc(+selectedSize)
+    playTimeFunc(+selectedSize)
+}
 
 
 })
 
 
 
-function timer(timeInMins){
+const timer = (timeInMins)=>{
     const demo = document.getElementById("demo");
  
 console.log("timeInMins: " + timeInMins);
@@ -197,18 +218,43 @@ console.log('done')
 
 let totalMsg = document.querySelector("#end-time");
 totalMsg.style.display = "block";
+if(i === playersArr.length){
+    totalMsg.innerHTML = `<h3>זמן הקצוב נגמר</h3>
+<button class="button-29" onClick="window.location.reload()">התחל מחדש</button>`;
+}else{
 totalMsg.innerHTML = `<h3>הזמן נגמר</h3>
-</div><h3>Dont give up!</h3>
-<div><button id="next-player">שחקן הבא</button></div>`;
+<div id="count_up_timer">0:0</div>
+<button class="button-29" id="next-player">שחקן הבא</button>`;
+}
+ let TheTime =  setInterval(countUpTimer, 1000);
 let nextPlayerBtn = document.getElementById('next-player')
+
+
+
 nextPlayerBtn.addEventListener('click',()=>{
+    playersArr.length <= 1 ? totalMsg.innerHTML += `<p class="warning-msg">אין שחקן הבא</p>`: console.log('ok')
+    // restarting thecountUp 
+    totalSeconds = 0;
+    clearInterval(TheTime)
     nextBtnFlag = true
     if(clockSwitch === false){
         
         let playersDiv = document.getElementById(`player-${i}`)
         playersDiv.style.backgroundColor = 'chartreuse'
+        let newerSvg = document.createElement('img')
+        newerSvg.id = `gamepad-${i}`
+        newerSvg.setAttribute('src','/svg/stadia_controller_FILL0_wght400_GRAD0_opsz48.svg')
+    playersDiv.appendChild(newerSvg)
+        // playersDiv.innerHTML += `  <img src="/svg/stadia_controller_FILL0_wght400_GRAD0_opsz48.svg" alt="">`
+    let theLate = document.getElementById('count_up_timer').innerHTML
+        
         let beforePlayer = document.getElementById(`player-${i-1}`)
+        console.log(theLate)
+        beforePlayer.innerHTML += `<p>התעכב ב-${theLate}</p>`
+        let deleteSvg = document.getElementById(`gamepad-${i-1}`)
+        deleteSvg.remove()
         beforePlayer.style.backgroundColor = 'white'
+
         i++
         }
     let selectedSize = checkedFunc();   
@@ -220,7 +266,7 @@ nextPlayerBtn.addEventListener('click',()=>{
 }, 1000);
 
 }
-const demo = document.getElementById("demo");
+// const demo = document.getElementById("demo");
 
 
 

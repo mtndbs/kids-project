@@ -1,16 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap");
 @font-face {
   font-family: calculator;
   src: url(Calculator.ttf);
 }
 * {
   direction: rtl;
+  font-size: 1.3rem;
+  font-family: "Amatic SC", cursive;
+  transition: all 0.5s;
+}
+
+#nav-bar {
+  background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+}
+
+#my-footer {
+  background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+}
+#my-footer div {
+  text-align: center;
 }
 
 .player-btn {
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
   width: 140px;
   height: 100px;
-  font-size: 1.2rem;
+  font-size: 1.7rem;
 }
 
 label {
@@ -25,13 +40,49 @@ label {
 }
 
 #screen {
-  width: 500px;
-  height: 140px;
+  width: 800px;
+  height: 190px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
+@media only all and (max-width: 818px) {
+  #screen {
+    display: grid;
+    grid-template-columns: auto auto;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+  }
+  #kid-name {
+    width: 90px;
+  }
+  fieldset {
+    margin: 5px;
+  }
+  #input-btn #input-time {
+    width: 40px;
+  }
+  #time-btn {
+    margin-top: 150px;
+    width: 330px;
+    height: 80px;
+  }
+  .time-wrap {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #demo {
+    font-size: 5rem;
+  }
+  #send-btn {
+    margin-right: 3px;
+  }
+  #end-time {
+    left: 8vw;
+  }
+}
 .time-div {
   width: 150px;
   height: 100px;
@@ -40,6 +91,7 @@ label {
 #time-btn {
   width: 200px;
   margin-top: 20px;
+  color: black;
   background-image: radial-gradient(100% 100% at 100% 0, #7fff00 0, #00ff59 100%);
 }
 
@@ -49,23 +101,31 @@ label {
   flex-direction: row;
 }
 
+#send-btn {
+  margin-right: 10px;
+  background-color: chartreuse;
+}
+
 #time-wrapper {
   display: flex;
   flex-direction: column;
 }
 
 #end-time {
+  width: 340px;
+  height: 180px;
   border-radius: 5px;
   box-shadow: 0px 0px 7px 4px rgba(50, 50, 50, 0.59);
-  background-color: wheat;
+  background-color: white;
   display: none;
   position: fixed;
   text-align: center;
-  left: 40%;
+  left: 38vw;
   bottom: 30%;
   font-size: 2rem;
   color: #050505;
-  padding: 40px;
+  padding: 20px;
+  z-index: 2;
 }
 
 .main-wrap {
@@ -75,6 +135,38 @@ label {
   margin: 10px auto;
 }
 
+.run-animation {
+  -webkit-animation-name: fade;
+          animation-name: fade;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-timing-function: cubic-bezier(0.075, 0.52, 0.965, 1);
+          animation-timing-function: cubic-bezier(0.075, 0.52, 0.965, 1);
+}
+
+@-webkit-keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 /* CSS */
 .button-29 {
   align-items: center;
@@ -109,11 +201,7 @@ label {
   touch-action: manipulation;
   white-space: nowrap;
   will-change: box-shadow, transform;
-  font-size: 18px;
-}
-
-.button-29:focus {
-  box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  font-family: "Amatic SC", cursive;
 }
 
 .button-29:hover {
@@ -126,7 +214,23 @@ label {
   transform: translateY(2px);
 }
 
+.warning-msg {
+  color: red;
+  text-align: center;
+  font-size: 2rem;
+}
+
 #input-time {
   width: 110px;
   display: none;
+}
+
+#next-play {
+  background-image: radial-gradient(100% 100% at 100% 0, #7fff00 0, #00ff59 100%);
+}
+
+#cancel-btn {
+  background-image: radial-gradient(100% 100% at 100% 0, orange 0, #ffff00 100%);
+  width: 100px;
+  margin-top: 20px;
 }/*# sourceMappingURL=style.css.map */
